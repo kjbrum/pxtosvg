@@ -31,7 +31,6 @@ class PXtoSVG_Shortcodes {
         $svg = file_get_contents($uploads_dir['basedir'].'/svg/'.$filename.'.svg');
 
         return $svg;
-        // return gzuncompress($svg);
     }
 }
 
