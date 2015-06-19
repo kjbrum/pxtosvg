@@ -11,9 +11,9 @@ A simple plugin that will allow users to upload raster images and convert them t
 - Add a field to upload a `.svg` file directly
 - Add extra upload fields (optional)
     - Custom filename
-    - Fill color
+- Add a "Library" page (shows all the SVGs)
 - Batch file upload
-- Add a settings page (where to save)
+- Add a settings page (save dir, etc...)
 - Compress the converted SVG
 - Add support for PNG somehow? [Example 1](http://brianflove.com/2014/12/10/png-support-for-php-on-os-x-yosemite/), [Example 2](http://stackoverflow.com/questions/26493762/yosemite-php-gd-mcrypt-installation)
 - Shortcode
