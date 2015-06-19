@@ -1,6 +1,6 @@
-# PX to SVG
+# PX to SVG (WIP)
 
-A simple plugin that will allow users to upload raster images and convert them to usable SVGs with a shortcode.
+> A simple plugin that will allow users to upload raster images and convert them to usable SVGs with a shortcode.
 
 
 ### Shortcode
