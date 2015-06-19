@@ -127,7 +127,9 @@ class PXtoSVG {
         try {
             // Generate the SVG
             // $output = $converter->loadImage($url)->generateSVG();
-            $output = $converter->loadImage($url)->saveSVG($output_dir.$file->post_title.'.svg');
+            $converter->loadImage($url);
+            // $converter->setThreshold(10);
+            $output = $converter->saveSVG($output_dir.$file->post_title.'.svg');
 
             // // Allows us access to the file system
             // WP_Filesystem();
