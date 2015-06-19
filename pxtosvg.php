@@ -126,17 +126,18 @@ class PXtoSVG {
 
         try {
             // Generate the SVG
-            $output = $converter->loadImage($url)->generateSVG();
+            // $output = $converter->loadImage($url)->generateSVG();
+            $output = $converter->loadImage($url)->saveSVG($output_dir.$file->post_title.'.svg');
 
             // Compress the output
-            $compressed = gzcompress($output);
+            // $compressed = gzcompress($output);
 
-            // This method is very improtant as it allows us access to the file system
-            WP_Filesystem();
+            // // This method is very improtant as it allows us access to the file system
+            // WP_Filesystem();
 
-            // Write output as `.svg`
-            file_put_contents($output_dir.$file->post_title.".svg", $compressed);
-            // file_put_contents($output_dir.$file->post_title.".svg", $output);
+            // // Write output as `.svg`
+            // // file_put_contents($output_dir.$file->post_title.".svg", $compressed);
+            // file_put_contents($output_dir.$file->post_title.'.svg', $output);
         } catch(Exception $e){
             echo $e->getMessage() . "<br>";
             return;
