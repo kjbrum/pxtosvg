@@ -33,7 +33,7 @@ class PXtoSVG {
         // Require our admin files
         if ( is_admin() ) {
             // Require the px2svg converter
-            require_once('includes/converter.php');
+            require_once('includes/Converter.php');
 
             // Require the admin functionality
             require_once('admin/pxtosvg-admin.php');

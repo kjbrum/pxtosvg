@@ -11,6 +11,7 @@
 - Add a field to upload a `.svg` file directly
 - Add extra upload fields (optional)
     - Custom filename
+    - Set the Threshold [Example 1](http://www.w3schools.com/jquerymobile/tryit.asp?filename=tryjqmob_forms_slider_range)
 - Add a "Library" page (shows all the SVGs)
 - Batch file upload
 - Add a settings page (save dir, etc...)
