@@ -76,14 +76,19 @@ class PXtoSVG {
             <?php wp_nonce_field('pxtosvg-raster-upload'); ?>
 
             <p>
-                <label for="raster_image"><strong>File:</strong></label><br>
-                <input type='file' id='raster_image' name='raster_image'></input>
+                <label for="raster_image"><strong>Raster Image:<sup>*</sup></strong></label><br>
+                <input type="file" id="raster_image" name="raster_image">
+            </p>
+
+            <p>
+                <label for="svg_name"><strong>SVG Name:</strong></label><br>
+                <input type="text" id="svg_name" name="svg_name">
             </p>
 
             <p>
                 <label for="threshold"><strong>Threshold (0-255):</strong></label><br>
-                <!-- <input type="range" name="threshold" id="threshold" value="0" min="0" max="255"> -->
                 <input type="number" name="threshold" id="threshold" value="0" min="0" max="255">
+                <!-- <input type="range" name="threshold" id="threshold" value="0" min="0" max="255"> -->
             </p>
 
             <?php submit_button('Upload') ?>
@@ -108,7 +113,7 @@ class PXtoSVG {
             $uploaded = media_handle_upload('raster_image', 0);
 
             // Error checking using WP functions
-            if( is_wp_error($uploaded) ) {
+            if( is_wp_error( $uploaded ) ) {
                 echo '<p><strong>Error:</strong> ' . $uploaded->get_error_message();
             } else {
                 $this->convert_px_to_svg( $uploaded );
@@ -119,31 +124,34 @@ class PXtoSVG {
 
     public function convert_px_to_svg( $raster_id ) {
         // Get the attachment
-        $file = get_post($raster_id);
+        $file = get_post( $raster_id );
 
         // Initialize our converter
         $converter = new Converter();
 
         // Get the url of the attachment
-        $url = wp_get_attachment_url($raster_id);
+        $url = wp_get_attachment_url( $raster_id );
 
         // Set where the SVG will be written
         $upload_dir = wp_upload_dir();
         $output_dir = $upload_dir['basedir'].'/svg/';
 
-        if(!file_exists($output_dir)) {
-            mkdir($output_dir, 0755, true);
+        if( !file_exists( $output_dir ) ) {
+            mkdir( $output_dir, 0755, true );
         }
 
         try {
             // Generate the SVG
-            $converter->loadImage($url);
+            $converter->loadImage( $url );
 
             // Set the threshold
-            $converter->setThreshold($_POST['threshold']);
+            $converter->setThreshold( $_POST['threshold'] );
 
             // Save the SVG
-            $output = $converter->saveSVG($output_dir.$file->post_title.'.svg');
+            if( $_POST['svg_name'] )
+                $output = $converter->saveSVG($output_dir.str_replace(' ', '_', $_POST['svg_name']).'.svg');
+            else
+                $output = $converter->saveSVG($output_dir.$file->post_title.'.svg');
 
             // // Allows us access to the file system
             // WP_Filesystem();
