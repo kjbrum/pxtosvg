@@ -12,7 +12,7 @@ Domain Path: /languages
 
 use Px2svg\Converter;
 
-if ( ! class_exists('PXtoSVG') ) :
+if ( ! class_exists( 'PXtoSVG' ) ) :
 
 class PXtoSVG {
     var $settings;
@@ -28,19 +28,19 @@ class PXtoSVG {
 
 
         // Require the shortcodes
-        require_once('includes/pxtosvg-shortcodes.php');
+        require_once( 'includes/pxtosvg-shortcodes.php' );
 
         // Require our admin files
         if ( is_admin() ) {
             // Require the px2svg converter
-            require_once('includes/Converter.php');
+            require_once( 'includes/Converter.php' );
 
             // Require the admin functionality
-            require_once('admin/pxtosvg-admin.php');
+            require_once( 'admin/pxtosvg-admin.php' );
         }
 
         // Create our plugin page
-        add_action('admin_menu', array( $this, 'add_plugin_page' ));
+        add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
     }
 
     /**
@@ -77,7 +77,7 @@ class PXtoSVG {
 
             <p>
                 <label for="raster_image"><strong>Raster Image:<sup>*</sup></strong></label><br>
-                <input type="file" id="raster_image" name="raster_image">
+                <input type="file" id="raster_image" name="raster_image" required>
             </p>
 
             <p>
@@ -122,6 +122,13 @@ class PXtoSVG {
         }
     }
 
+    /**
+     *  Handle converting the raster image to an SVG
+     *
+     *  @param   int   $raster_id  The ID of the image attachment
+     *
+     *  @return  void
+     */
     public function convert_px_to_svg( $raster_id ) {
         // Get the attachment
         $file = get_post( $raster_id );
@@ -149,16 +156,16 @@ class PXtoSVG {
 
             // Save the SVG
             if( $_POST['svg_name'] )
-                $output = $converter->saveSVG($output_dir.str_replace(' ', '_', $_POST['svg_name']).'.svg');
+                $output = $converter->saveSVG( $output_dir.str_replace( ' ', '-', $_POST['svg_name'] ).'.svg' );
             else
-                $output = $converter->saveSVG($output_dir.$file->post_title.'.svg');
+                $output = $converter->saveSVG( $output_dir.$file->post_title.'.svg' );
 
             // // Allows us access to the file system
             // WP_Filesystem();
             // // Write output as `.svg`
             // $output = $converter->loadImage($url)->generateSVG();
             // file_put_contents($output_dir.$file->post_title.'.svg', $output);
-        } catch(Exception $e){
+        } catch( Exception $e ){
             echo $e->getMessage() . '<br>';
 
             return;
@@ -169,7 +176,7 @@ class PXtoSVG {
 function pxtosvg() {
     global $pxtosvg;
 
-    if ( ! isset($pxtosvg) ) {
+    if ( ! isset( $pxtosvg ) ) {
         $pxtosvg = new PXtoSVG();
     }
 
