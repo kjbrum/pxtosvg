@@ -64,16 +64,28 @@ class PXtoSVG {
      *  @return  void
      */
     public function create_general_page() {
+        // Check if the form has been submitted
         $this->handle_raster_upload();
     ?>
         <h1>PX to SVG</h1>
 
-        <h3>Upload Image</h3>
+        <h3>Upload an Image</h3>
         <p>Select the raster image you want to upload to convert to an SVG</p>
 
         <form  method="post" enctype="multipart/form-data">
             <?php wp_nonce_field('pxtosvg-raster-upload'); ?>
-            <input type='file' id='raster_image' name='raster_image'></input>
+
+            <p>
+                <label for="raster_image"><strong>File:</strong></label><br>
+                <input type='file' id='raster_image' name='raster_image'></input>
+            </p>
+
+            <p>
+                <label for="threshold"><strong>Threshold (0-255):</strong></label><br>
+                <!-- <input type="range" name="threshold" id="threshold" value="0" min="0" max="255"> -->
+                <input type="number" name="threshold" id="threshold" value="0" min="0" max="255">
+            </p>
+
             <?php submit_button('Upload') ?>
         </form>
     <?php
@@ -85,7 +97,6 @@ class PXtoSVG {
      *  @return  void
      */
     public function handle_raster_upload() {
-
         // Check if the file appears on the _FILES array
         if( isset( $_FILES['raster_image'] ) ) {
 
@@ -98,10 +109,10 @@ class PXtoSVG {
 
             // Error checking using WP functions
             if( is_wp_error($uploaded) ) {
-                echo 'Error uploading file: ' . $uploaded->get_error_message();
+                echo '<p><strong>Error:</strong> ' . $uploaded->get_error_message();
             } else {
-                echo 'File upload successful!';
                 $this->convert_px_to_svg( $uploaded );
+                echo '<p><strong>Success:</strong> Your SVG has been successfully created!</p>';
             }
         }
     }
@@ -126,18 +137,22 @@ class PXtoSVG {
 
         try {
             // Generate the SVG
-            // $output = $converter->loadImage($url)->generateSVG();
             $converter->loadImage($url);
-            // $converter->setThreshold(10);
+
+            // Set the threshold
+            $converter->setThreshold($_POST['threshold']);
+
+            // Save the SVG
             $output = $converter->saveSVG($output_dir.$file->post_title.'.svg');
 
             // // Allows us access to the file system
             // WP_Filesystem();
-
             // // Write output as `.svg`
+            // $output = $converter->loadImage($url)->generateSVG();
             // file_put_contents($output_dir.$file->post_title.'.svg', $output);
         } catch(Exception $e){
-            echo $e->getMessage() . "<br>";
+            echo $e->getMessage() . '<br>';
+
             return;
         }
     }
