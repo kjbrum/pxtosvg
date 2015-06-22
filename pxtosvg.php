@@ -160,7 +160,8 @@ class PXtoSVG {
             } else {
                 $this->convert_px_to_svg( $uploaded );
                 echo '<div id="message" class="updated notice is-dismissible">
-                    <p>SVG has been successfully created.</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+                    <p>Image has been successfully converted to an SVG. <a href="link-to-svg">View SVG</a></p>
+                    <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
                 </div>';
             }
         }
@@ -203,7 +204,7 @@ class PXtoSVG {
                 // Check for uploading errors
                 if( $uploaded ) {
                     echo '<div id="message" class="updated notice is-dismissible">
-                        <p>SVG has been successfully uploaded.</p>
+                        <p>SVG has been successfully uploaded. <a href="link-to-svg">View SVG</a></p>
                         <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
                     </div>';
                 } else {
@@ -259,7 +260,7 @@ class PXtoSVG {
             // $output = $converter->loadImage($url)->generateSVG();
             // file_put_contents($output_dir.$file->post_title.'.svg', $output);
         } catch( Exception $e ){
-            echo $e->getMessage() . '<br>';
+            echo '<div id="message" class="error"><p>'.$e->getMessage().'</p></div>';
 
             return;
         }
