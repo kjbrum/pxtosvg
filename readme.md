@@ -17,6 +17,7 @@
     - Get all the attributes working (color, width, height)
     - How-to in the readme
     - Add a button above the editor to insert a shortcode (able to choose from created SVGs)
+- Add the uploaded image as fallback, or include a field
 - Create an SVG sprite? [Example](http://24ways.org/2014/an-overview-of-svg-sprite-creation-techniques/)
 - Add the ability to edit the SVG's?
 
