@@ -149,6 +149,7 @@ class PXtoSVG {
 
             $image = $_FILES['raster_image'];
 
+            // Upload our image to the WP media library
             $uploaded = media_handle_upload('raster_image', 0);
 
             // Check for uploading errors
@@ -176,6 +177,7 @@ class PXtoSVG {
 
             // Check for any errors
             if( !$_FILES['svg_file']['error'] ) {
+
                 // Check for nonce
                 check_admin_referer('pxtosvg-svg-upload');
 
@@ -192,6 +194,7 @@ class PXtoSVG {
                 $upload_dir = wp_upload_dir();
                 $output_dir = $upload_dir['basedir'].'/svg/';
 
+                // Save the SVG with the correct filename
                 if( $_POST['svg_filename'] )
                     $uploaded = move_uploaded_file( $svg_file['tmp_name'], $output_dir.str_replace( ' ', '-', $_POST['svg_filename'] ).'.svg' );
                 else

@@ -8,17 +8,16 @@
 
 ### To-Do
 
-- Add extra upload fields (optional)
-    - Set the threshold using a range input[Example 1](http://www.w3schools.com/jquerymobile/tryit.asp?filename=tryjqmob_forms_slider_range)
+- Check if filename already exists when converting and uploading
 - Add a "Library" page (shows all the SVGs)
 - Batch file upload
-- Add a settings page (save dir, etc...)
-- Compress the converted SVG
+- Add a settings page (save dir, default threshold, compress/not compress SVG, etc...)
 - Add support for PNG somehow? [Example 1](http://brianflove.com/2014/12/10/png-support-for-php-on-os-x-yosemite/), [Example 2](http://stackoverflow.com/questions/26493762/yosemite-php-gd-mcrypt-installation)
 - Shortcode
     - Get all the attributes working (color, width, height)
     - How-to in the readme
     - Add a button above the editor to insert a shortcode (able to choose from created SVGs)
+- Add the ability to edit the SVG's?
 
 
 ### Credit
