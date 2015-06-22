@@ -97,7 +97,6 @@ class PXtoSVG {
 
                             <td>
                                 <input type="number" name="threshold" id="threshold" value="0" min="0" max="255">
-                                <!-- <input type="range" name="threshold" id="threshold" value="0" min="0" max="255"> -->
                                 <p class="description">Color threshold determines whether similar colors are treated as the same color when creating the SVG. Default is 0.</p>
                             </td>
                         </tr>
@@ -157,6 +156,8 @@ class PXtoSVG {
                 echo '<div id="message" class="error">
                     <p>'.$uploaded->get_error_message().'</p>
                 </div>';
+
+                return;
             } else {
                 $this->convert_px_to_svg( $uploaded );
                 echo '<div id="message" class="updated notice is-dismissible">
@@ -188,6 +189,7 @@ class PXtoSVG {
                 // Check for the correct extension
                 if( $ext != 'svg' ) {
                     echo '<div id="message" class="error"><p>You must choose an SVG file to be uploaded.</p></div>';
+
                     return;
                 }
 
@@ -209,9 +211,13 @@ class PXtoSVG {
                     </div>';
                 } else {
                     echo '<div id="message" class="error"><p>There was an error while uploading the SVG.</p></div>';
+
+                    return;
                 }
             } else {
                 echo '<div id="message" class="error"><p>'.$svg_file['error'].'</p></div>';
+
+                return;
             }
         }
     }
