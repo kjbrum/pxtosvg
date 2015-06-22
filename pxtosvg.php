@@ -74,13 +74,13 @@ class PXtoSVG {
             ?>
 
             <h3 class="title">Convert an Image</h3>
-            <p>This will convert a raster image to an SVG.</p>
+            <p>This will convert a raster image to an SVG to be used with the <code>[svg]</code> shortcode.</p>
             <form  method="post" enctype="multipart/form-data">
                 <?php wp_nonce_field('pxtosvg-raster-upload'); ?>
                 <table class="form-table">
                     <tbody>
                         <tr>
-                            <th scope="row"><label for="raster_image">Image:<sup>*</sup></label></th>
+                            <th scope="row"><label for="raster_image">Raster Image:<sup>*</sup></label></th>
                             <td><input type="file" id="raster_image" name="raster_image" required></td>
                         </tr>
                         <tr>
@@ -107,8 +107,10 @@ class PXtoSVG {
                 <?php submit_button('Convert Image') ?>
             </form>
 
+            <hr>
+
             <h3 class="title">Upload an SVG</h3>
-            <p>This will upload an SVG to be used on your site.</p>
+            <p>This will upload an SVG to be used with the <code>[svg]</code> shortcode.</p>
             <form  method="post" enctype="multipart/form-data">
                 <?php wp_nonce_field('pxtosvg-svg-upload'); ?>
                 <table class="form-table">
