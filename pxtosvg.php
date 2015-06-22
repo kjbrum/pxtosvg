@@ -70,11 +70,11 @@ class PXtoSVG {
             <?php
                 // Check if the form has been submitted
                 $this->handle_raster_upload();
+                $this->handle_svg_upload();
             ?>
 
-            <h3 class="title">Upload an Image</h3>
-            <p>Select the raster image you want to upload to convert to an SVG</p>
-
+            <h3 class="title">Convert an Image</h3>
+            <p>This will convert a raster image to an SVG.</p>
             <form  method="post" enctype="multipart/form-data">
                 <?php wp_nonce_field('pxtosvg-raster-upload'); ?>
                 <table class="form-table">
@@ -84,18 +84,50 @@ class PXtoSVG {
                             <td><input type="file" id="raster_image" name="raster_image" required></td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="svg_name"><strong>Filename:</strong></label></th>
-                            <td><input type="text" id="svg_name" name="svg_name"></td>
+                            <th scope="row"><label for="new_svg_filename"><strong>Filename:</strong></label></th>
+                            <td>
+                                <input type="text" id="new_svg_filename" name="new_svg_filename">
+                                <p class="description">This will set the filename of the uploaded image. Default is the current filename.</p>
+                            </td>
                         </tr>
                         <tr>
-                            <th scope="row"><label for="threshold"><strong>Color Threshold (0-255):</strong></label></th>
-                            <td><input type="number" name="threshold" id="threshold" value="0" min="0" max="255"></td>
-                            <!-- <td><input type="range" name="threshold" id="threshold" value="0" min="0" max="255"></td> -->
+                            <th scope="row">
+                                <label for="threshold"><strong>Color Threshold (0-255):</strong></label>
+                            </th>
+
+                            <td>
+                                <input type="number" name="threshold" id="threshold" value="0" min="0" max="255">
+                                <!-- <input type="range" name="threshold" id="threshold" value="0" min="0" max="255"> -->
+                                <p class="description">Color threshold determines whether similar colors are treated as the same color when creating the SVG. Default is 0.</p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <?php submit_button('Upload') ?>
+                <?php submit_button('Convert Image') ?>
+            </form>
+
+            <h3 class="title">Upload an SVG</h3>
+            <p>This will upload an SVG to be used on your site.</p>
+            <form  method="post" enctype="multipart/form-data">
+                <?php wp_nonce_field('pxtosvg-svg-upload'); ?>
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row"><label for="svg_file">SVG:<sup>*</sup></label></th>
+                            <td><input type="file" id="svg_file" name="svg_file" required></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="svg_filename"><strong>Filename:</strong></label></th>
+                            <td>
+                                <input type="text" id="svg_filename" name="svg_filename">
+                                <p class="description">This will set the filename of the uploaded SVG. Default is the current filename.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <?php submit_button('Upload SVG') ?>
             </form>
         </div>
     <?php
@@ -113,19 +145,67 @@ class PXtoSVG {
             // Check for nonce
             check_admin_referer('pxtosvg-raster-upload');
 
-            $pdf = $_FILES['raster_image'];
+            $image = $_FILES['raster_image'];
 
             $uploaded = media_handle_upload('raster_image', 0);
 
-            // Error checking using WP functions
+            // Check for uploading errors
             if( is_wp_error( $uploaded ) ) {
-                echo '<p><strong>Error:</strong> ' . $uploaded->get_error_message();
+                echo '<div id="message" class="error">
+                    <p>'.$uploaded->get_error_message().'</p>
+                </div>';
             } else {
                 $this->convert_px_to_svg( $uploaded );
-                // echo '<p><strong>Success:</strong> Your SVG has been successfully created!</p>';
                 echo '<div id="message" class="updated notice is-dismissible">
-                    <p>SVG has been <strong>successfully</strong> created.</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+                    <p>SVG has been successfully created.</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
                 </div>';
+            }
+        }
+    }
+
+    /**
+     *  Handle the uploading of an SVG
+     *
+     *  @return  void
+     */
+    public function handle_svg_upload() {
+        // Check if the file appears on the _FILES array
+        if( isset( $_FILES['svg_file'] ) ) {
+
+            // Check for any errors
+            if( !$_FILES['svg_file']['error'] ) {
+                // Check for nonce
+                check_admin_referer('pxtosvg-svg-upload');
+
+                $svg_file = $_FILES['svg_file'];
+                $ext = pathinfo($svg_file['name'], PATHINFO_EXTENSION);
+
+                // Check for the correct extension
+                if( $ext != 'svg' ) {
+                    echo '<div id="message" class="error"><p>You must choose an SVG file to be uploaded.</p></div>';
+                    return;
+                }
+
+                // Set where the SVG will be written
+                $upload_dir = wp_upload_dir();
+                $output_dir = $upload_dir['basedir'].'/svg/';
+
+                if( $_POST['svg_filename'] )
+                    $uploaded = move_uploaded_file( $svg_file['tmp_name'], $output_dir.str_replace( ' ', '-', $_POST['svg_filename'] ).'.svg' );
+                else
+                    $uploaded = move_uploaded_file( $svg_file['tmp_name'], $output_dir.$svg_file['name'] );
+
+                // Check for uploading errors
+                if( $uploaded ) {
+                    echo '<div id="message" class="updated notice is-dismissible">
+                        <p>SVG has been successfully uploaded.</p>
+                        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+                    </div>';
+                } else {
+                    echo '<div id="message" class="error"><p>There was an error while uploading the SVG.</p></div>';
+                }
+            } else {
+                echo '<div id="message" class="error"><p>'.$svg_file['error'].'</p></div>';
             }
         }
     }
@@ -163,8 +243,8 @@ class PXtoSVG {
             $converter->setThreshold( $_POST['threshold'] );
 
             // Save the SVG
-            if( $_POST['svg_name'] )
-                $output = $converter->saveSVG( $output_dir.str_replace( ' ', '-', $_POST['svg_name'] ).'.svg' );
+            if( $_POST['new_svg_filename'] )
+                $output = $converter->saveSVG( $output_dir.str_replace( ' ', '-', $_POST['new_svg_filename'] ).'.svg' );
             else
                 $output = $converter->saveSVG( $output_dir.$file->post_title.'.svg' );
 
