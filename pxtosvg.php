@@ -284,7 +284,9 @@ function pxtosvg() {
 }
 
 // Initialize
-pxtosvg();
+if( is_admin() ) {
+    pxtosvg();
+}
 
 endif;
 
