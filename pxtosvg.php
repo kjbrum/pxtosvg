@@ -63,36 +63,41 @@ class PXtoSVG {
      *
      *  @return  void
      */
-    public function create_general_page() {
-        // Check if the form has been submitted
-        $this->handle_raster_upload();
-    ?>
-        <h1>PX to SVG</h1>
+    public function create_general_page() { ?>
+        <div class="wrap">
+            <h2>PX to SVG</h2>
 
-        <h3>Upload an Image</h3>
-        <p>Select the raster image you want to upload to convert to an SVG</p>
+            <?php
+                // Check if the form has been submitted
+                $this->handle_raster_upload();
+            ?>
 
-        <form  method="post" enctype="multipart/form-data">
-            <?php wp_nonce_field('pxtosvg-raster-upload'); ?>
+            <h3 class="title">Upload an Image</h3>
+            <p>Select the raster image you want to upload to convert to an SVG</p>
 
-            <p>
-                <label for="raster_image"><strong>Raster Image:<sup>*</sup></strong></label><br>
-                <input type="file" id="raster_image" name="raster_image" required>
-            </p>
+            <form  method="post" enctype="multipart/form-data">
+                <?php wp_nonce_field('pxtosvg-raster-upload'); ?>
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row"><label for="raster_image">Image:<sup>*</sup></label></th>
+                            <td><input type="file" id="raster_image" name="raster_image" required></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="svg_name"><strong>Filename:</strong></label></th>
+                            <td><input type="text" id="svg_name" name="svg_name"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="threshold"><strong>Color Threshold (0-255):</strong></label></th>
+                            <td><input type="number" name="threshold" id="threshold" value="0" min="0" max="255"></td>
+                            <!-- <td><input type="range" name="threshold" id="threshold" value="0" min="0" max="255"></td> -->
+                        </tr>
+                    </tbody>
+                </table>
 
-            <p>
-                <label for="svg_name"><strong>SVG Name:</strong></label><br>
-                <input type="text" id="svg_name" name="svg_name">
-            </p>
-
-            <p>
-                <label for="threshold"><strong>Threshold (0-255):</strong></label><br>
-                <input type="number" name="threshold" id="threshold" value="0" min="0" max="255">
-                <!-- <input type="range" name="threshold" id="threshold" value="0" min="0" max="255"> -->
-            </p>
-
-            <?php submit_button('Upload') ?>
-        </form>
+                <?php submit_button('Upload') ?>
+            </form>
+        </div>
     <?php
     }
 
@@ -117,7 +122,10 @@ class PXtoSVG {
                 echo '<p><strong>Error:</strong> ' . $uploaded->get_error_message();
             } else {
                 $this->convert_px_to_svg( $uploaded );
-                echo '<p><strong>Success:</strong> Your SVG has been successfully created!</p>';
+                // echo '<p><strong>Success:</strong> Your SVG has been successfully created!</p>';
+                echo '<div id="message" class="updated notice is-dismissible">
+                    <p>SVG has been <strong>successfully</strong> created.</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+                </div>';
             }
         }
     }
